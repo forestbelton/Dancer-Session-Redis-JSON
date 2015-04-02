@@ -4,6 +4,7 @@ package Dancer::Session::Redis::JSON;
 
 # VERSION
 # ABSTRACT: Session store in Redis with JSON serialization
+$VERSION = "0.001";
 
 use base 'Dancer::Session::Abstract';
 
