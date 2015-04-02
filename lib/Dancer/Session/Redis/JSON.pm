@@ -11,6 +11,7 @@ use Redis;
 use JSON qw(encode_json decode_json);
 use Function::Parameters qw(:strict);
 use Dancer::Config qw(setting);
+use Dancer qw(var);
 
 use Dancer::Session::Redis::JSON::Signature qw(sign unsign);
 
@@ -44,6 +45,7 @@ method update() {
     } keys %$self;
 
     $REDIS->set($id, encode_json $data);
+
     return $self;
 }
 
@@ -57,11 +59,16 @@ fun create(Str $class) {
 }
 
 fun retrieve(Str $class, Str|Int $id) {
-    my $mid = $secret
-        ? unsign($id, $secret)
-        : $id;
+    my $val = var '_dancer_session_redis_json';
 
-    my $val = $REDIS->get($mid);
+    if ( !$val ) {
+        my $mid = $secret
+            ? unsign($id, $secret)
+            : $id;
+
+        $val = $REDIS->get($mid);
+        var '_dancer_session_redis_json' => $val;
+    }
 
     if($val) {
         $val = bless(decode_json($val), $class);
@@ -79,6 +86,7 @@ method destroy() {
         : $self->id;
 
     $REDIS->del($id);
+    var '_dancer_session_redis_json' => undef;
 }
 
 method flush() {
