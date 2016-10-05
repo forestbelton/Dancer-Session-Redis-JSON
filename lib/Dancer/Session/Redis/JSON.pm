@@ -4,7 +4,7 @@ package Dancer::Session::Redis::JSON;
 
 # VERSION
 # ABSTRACT: Session store in Redis with JSON serialization
-$VERSION = "0.001";
+$VERSION = "0.002";
 
 use base 'Dancer::Session::Abstract';
 
@@ -36,7 +36,10 @@ method update() {
             path           => setting('session_cookie_path')  // '/',
             httpOnly       => setting('session_is_http_only') // JSON::true,
             expires        => setting('session_expires'),
-            originalMaxAge => undef
+            expires        => setting('session_expires'),
+            secure         => setting('session_secure'),
+            domain         => setting('session_domain'),
+            originalMaxAge => undef,
         },
     };
 
