@@ -4,7 +4,7 @@ Dancer::Session::Redis::JSON - Session store in Redis with JSON serialization
 
 # VERSION
 
-version 0.001
+version 0.002
 
 # SYNOPSIS
 
